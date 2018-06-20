@@ -9,11 +9,9 @@ string num_bin[8];   // 001
 string Qn_map[3][2]; // 1x101x
 string Qn_JK[3][2];
 vector<int> num_x;
-int num_q[3][2][6] =
-    {
-        {{2, 0, 1, 3, 2, 0}, {6, 4, 5, 7, 6, 4}},
-        {{4, 0, 1, 5, 4, 0}, {6, 2, 3, 7, 6, 2}},
-        {{4, 0, 2, 6, 4, 0}, {5, 1, 3, 7, 5, 1}}};
+int num_q[3][2][6] = {{{2, 0, 1, 3, 2, 0}, {6, 4, 5, 7, 6, 4}},
+                      {{4, 0, 1, 5, 4, 0}, {6, 2, 3, 7, 6, 2}},
+                      {{4, 0, 2, 6, 4, 0}, {5, 1, 3, 7, 5, 1}}};
 /*
 Qn_map
 Q2:
@@ -95,10 +93,7 @@ void GetInput()
 {
     cout << "Please enter six numbers:" << endl
          << "$ ";
-    for (int i = 0; i < 8; ++i)
-    {
-        num_bin[i] = "xxx";
-    }
+    for_each(begin(num_bin), end(num_bin), [&](string &s) { s = "xxx"; });
     int prev, next, first;
     cin >> prev;
     first = prev;
@@ -116,6 +111,7 @@ void GetInput()
             num_x.push_back(i);
         }
     }
+    cout << endl;
 }
 
 void GetQnMap()
@@ -225,8 +221,7 @@ char GetString(int x, int y, int m, int n)
 
 void PrintFirst()
 {
-    cout << endl
-         << "Karnaugh map:" << endl
+    cout << "Karnaugh map:" << endl
          << "   00  01  11  10"
          << endl;
     for (int i = 0; i < 2; ++i)
@@ -237,12 +232,12 @@ void PrintFirst()
              << num_bin[i * 4 + 3] << " "
              << num_bin[i * 4 + 2] << endl;
     }
+    cout << endl;
 }
 
 void PrintQn(int n)
 {
-    cout << endl
-         << "Karnaugh map Q" << n << ":" << endl
+    cout << "Karnaugh map Q" << n << ":" << endl
          << "   00  01  11  10"
          << endl;
     n = 2 - n;
@@ -254,11 +249,11 @@ void PrintQn(int n)
              << num_bin[i * 4 + 3][n] << "   "
              << num_bin[i * 4 + 2][n] << endl;
     }
+    cout << endl;
 }
 
 void PrintJK()
 {
-    cout << endl;
     for (int i = 0; i < 3; ++i)
     {
         string jk[2] = {"J", "K"};
@@ -274,19 +269,15 @@ void PrintJK()
             cout << endl;
         }
     }
+    cout << endl;
 }
 
 void PrintSecond()
 {
-    for (int i = 0; i < 8; ++i)
-    {
-        for (char &c : num_bin[i])
-        {
-            c = (c == 'x') ? '0' : c;
-        }
-    }
+    for_each(begin(num_bin), end(num_bin), [](string &s) {
+        for_each(s.begin(), s.end(), [](char &c) { c = (c == 'x') ? '0' : c; });
+    });
     PrintFirst();
-    cout << endl;
 }
 
 bool TestSelfSetup()
