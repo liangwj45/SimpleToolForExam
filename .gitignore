@@ -1,15 +1,14 @@
 # OSX
-#
 .DS_Store
 
 # editors
-#
 .vscode
 
 # executable
-#
 bin
 
 # build
-#
 build
+
+#executable
+*.exe

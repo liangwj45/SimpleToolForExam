@@ -74,23 +74,27 @@ int main()
         PrintSecond();
         if (TestSelfSetup())
         {
-            cout << "Self-Setup" << endl
-                 << endl;
+            cout << "Self-Setup" << endl;
             break;
         }
         cout << "Un-Self-Setup" << endl; // 3 2 5 1 6 4
-        cout << "Please put in 2 number for next state of the xxx"
-             << endl;
+        cout << "Please put in 2 number for next state of the xxx:" << endl
+             << "$ ";
         int n, m;
         cin >> n >> m; // 7 6
         num_bin[num_x[0]] = ToBinary(n);
         num_bin[num_x[1]] = ToBinary(m);
     }
+    int c;
+    while (cin >> c)
+        ;
     return 0;
 }
 
 void GetInput()
 {
+    cout << "Please enter six numbers:" << endl
+         << "$ ";
     for (int i = 0; i < 8; ++i)
     {
         num_bin[i] = "xxx";
