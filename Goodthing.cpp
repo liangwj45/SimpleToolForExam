@@ -206,16 +206,16 @@ void PrintQn(int n) {
 }
 
 void PrintJK() {
-  for (int i = 0; i < 3; ++i) {
-    string jk[2] = {"J", "K"};
-    for (int j = 0; j < 2; ++j) {
+  string jk[2] = {"J", "K"};
+  for (int j = 0; j < 2; ++j) {
+    for (int i = 0; i < 3; ++i) {
       cout << jk[j] << 2 - i << (j == 0 ? ' ' : '\'') << " = ";
       for_each(Qn_JK[i][j].begin(), Qn_JK[i][j].end(),
                [&](char c) { cout << JK_char[c]; });
       cout << endl;
     }
+    cout << endl;
   }
-  cout << endl;
 }
 
 void PrintSecond() {
