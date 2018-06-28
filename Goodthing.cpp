@@ -5,6 +5,9 @@
 #include <vector>
 using namespace std;
 
+#define forto(i, a, b) for (int i = (a); i < (b); ++i)
+#define fordown(i, a, b) for (int i = (a); i > (b); --i)
+
 string num_bin[8];    // 001
 string Qn_map[3][2];  // 1x101x
 string Qn_JK[3][2];
@@ -82,88 +85,80 @@ int main() {
 
 void GetInput() {
   cout << "Please enter six numbers:" << endl << "$ ";
-  for_each(begin(num_bin), end(num_bin), [&](string &s) { s = "xxx"; });
+  forto(i, 0, 8) num_bin[i] = "xxx";
   int prev, next, first;
   cin >> prev;
   first = prev;
-  for (int i = 0; i < 5; ++i) {
+  forto(i, 0, 5) {
     cin >> next;
     num_bin[prev] = ToBinary(next);
     prev = next;
   }
   num_bin[prev] = ToBinary(first);
-  for (int i = 0; i < 8; ++i) {
-    if (num_bin[i][0] == 'x') {
-      num_x.push_back(i);
-    }
+  forto(i, 0, 8) if (num_bin[i][0] == 'x') {
+    num_x.push_back(i);
   }
   cout << endl;
 }
 
 void GetQnMap() {
-  for (int i = 0; i < 3; ++i) {
-    for (int j = 0; j < 2; ++j) {
-      Qn_map[i][j].clear();
-      for (int k = 0; k < 6; ++k) {
-        Qn_map[i][j] += num_bin[num_q[i][j][k]][i];
-      }
-    }
+  forto(i, 0, 3) forto(j, 0, 2) {
+    Qn_map[i][j].clear();
+    forto(k, 0, 6) Qn_map[i][j] += num_bin[num_q[i][j][k]][i];
   }
 }
 
 void GetJK() {
-  for (int i = 0; i < 3; ++i) {
-    for (int j = 0; j < 2; ++j) {
-      string tmp = Qn_map[i][j];
-      if (AllZero(tmp)) {
-        Qn_JK[i][j] = "0";
-        continue;
-      }
-      if (AllOne(tmp)) {
-        Qn_JK[i][j] = "1";
-        for (int k = 1; k < 5; ++k) {
-          if (tmp[k] == 'x') {
-            num_bin[num_q[i][j][k]][i] = '1';
-          }
-        }
-        continue;
-      }
-      int x = i == 0 ? 1 : 0;
-      int y = i == 2 ? 1 : 2;
-      string s;
-      bool used[6] = {false};
-      for (int k = 1; k < 5; ++k) {
-        if (tmp[k] == '1' && !used[k]) {
-          if (!s.empty()) {
-            s.push_back('+');
-          }
-          if (tmp[k + 1] == '1') {
-            s += GetString(x, y, k, k + 1);
-            int n = k + 1 == 5 ? 1 : k + 1;
-            used[n] = true;
-            continue;
-          }
-          if (tmp[k - 1] == '1') {
-            s += GetString(x, y, k, k - 1);
-            int n = k - 1 == 0 ? 4 : k - 1;
-            used[n] = true;
-            continue;
-          }
-          if (tmp[k + 1] == 'x') {
-            s += GetString(x, y, k, k + 1);
-            num_bin[num_q[i][j][k + 1]][i] = '1';
-            continue;
-          }
-          if (tmp[k - 1] == 'x') {
-            s += GetString(x, y, k, k - 1);
-            num_bin[num_q[i][j][k - 1]][i] = '1';
-            continue;
-          }
-          s += GetString(x, y, k);
-        }
-      }
-      Qn_JK[i][j] = s;
+  forto(i, 0, 3) forto(j, 0, 2) {
+    string tmp = Qn_map[i][j];
+    if (AllZero(tmp)) {
+      Qn_JK[i][j] = "0";
+      continue;
     }
+    if (AllOne(tmp)) {
+      Qn_JK[i][j] = "1";
+      for (int k = 1; k < 5; ++k) {
+        if (tmp[k] == 'x') {
+          num_bin[num_q[i][j][k]][i] = '1';
+        }
+      }
+      continue;
+    }
+    int x = i == 0 ? 1 : 0;
+    int y = i == 2 ? 1 : 2;
+    string s;
+    bool used[6] = {false};
+    forto(k, 1, 5) {
+      if (tmp[k] == '1' && !used[k]) {
+        if (!s.empty()) {
+          s.push_back('+');
+        }
+        if (tmp[k + 1] == '1') {
+          s += GetString(x, y, k, k + 1);
+          int n = k + 1 == 5 ? 1 : k + 1;
+          used[n] = true;
+          continue;
+        }
+        if (tmp[k - 1] == '1') {
+          s += GetString(x, y, k, k - 1);
+          int n = k - 1 == 0 ? 4 : k - 1;
+          used[n] = true;
+          continue;
+        }
+        if (tmp[k + 1] == 'x') {
+          s += GetString(x, y, k, k + 1);
+          num_bin[num_q[i][j][k + 1]][i] = '1';
+          continue;
+        }
+        if (tmp[k - 1] == 'x') {
+          s += GetString(x, y, k, k - 1);
+          num_bin[num_q[i][j][k - 1]][i] = '1';
+          continue;
+        }
+        s += GetString(x, y, k);
+      }
+    }
+    Qn_JK[i][j] = s;
   }
 }
 
@@ -187,41 +182,37 @@ char GetString(int x, int y, int m, int n) {
 
 void PrintFirst() {
   cout << "Karnaugh map:" << endl << "   00  01  11  10" << endl;
-  for (int i = 0; i < 2; ++i) {
-    cout << i << "  " << num_bin[i * 4] << " " << num_bin[i * 4 + 1] << " "
-         << num_bin[i * 4 + 3] << " " << num_bin[i * 4 + 2] << endl;
-  }
-  cout << endl;
+  cout << 0 << "  " << num_bin[0] << " " << num_bin[1] << " " << num_bin[3]
+       << " " << num_bin[2] << endl;
+  cout << 1 << "  " << num_bin[4] << " " << num_bin[5] << " " << num_bin[7]
+       << " " << num_bin[6] << endl
+       << endl;
 }
 
 void PrintQn(int n) {
   cout << "Karnaugh map Q" << n << ":" << endl << "   00  01  11  10" << endl;
   n = 2 - n;
-  for (int i = 0; i < 2; ++i) {
-    cout << i << "  " << num_bin[i * 4][n] << "   " << num_bin[i * 4 + 1][n]
-         << "   " << num_bin[i * 4 + 3][n] << "   " << num_bin[i * 4 + 2][n]
-         << endl;
-  }
-  cout << endl;
+  cout << 0 << "  " << num_bin[0][n] << " " << num_bin[1][n] << " "
+       << num_bin[3][n] << " " << num_bin[2][n] << endl;
+  cout << 1 << "  " << num_bin[4][n] << " " << num_bin[5][n] << " "
+       << num_bin[7][n] << " " << num_bin[6][n] << endl
+       << endl;
 }
 
 void PrintJK() {
   string jk[2] = {"J", "K"};
-  for (int j = 0; j < 2; ++j) {
-    for (int i = 0; i < 3; ++i) {
-      cout << jk[j] << 2 - i << (j == 0 ? ' ' : '\'') << " = ";
-      for_each(Qn_JK[i][j].begin(), Qn_JK[i][j].end(),
-               [&](char c) { cout << JK_char[c]; });
-      cout << endl;
-    }
+  forto(j, 0, 2) forto(i, 0, 3) {
+    cout << jk[j] << 2 - i << (j == 0 ? ' ' : '\'') << " = ";
+    for_each(Qn_JK[i][j].begin(), Qn_JK[i][j].end(),
+             [&](char c) { cout << JK_char[c]; });
     cout << endl;
   }
+  cout << endl;
 }
 
 void PrintSecond() {
-  for_each(begin(num_bin), end(num_bin), [](string &s) {
-    for_each(s.begin(), s.end(), [](char &c) { c = (c == 'x') ? '0' : c; });
-  });
+  forto(i, 0, 8) forto(j, 0, num_bin[i].length()) if (num_bin[i][j] == 'x')
+      num_bin[i][j] = '0';
   PrintFirst();
 }
 
